@@ -16,9 +16,31 @@ datasource db {
 }
 
 model Books {
+  id           Int            @id @default(autoincrement())
+  title        String
+  author       String
+  year         Int
+  createdAt    DateTime       @default(now())
+  transactions Transactions[]
+}
+
+model Transactions {
   id        Int      @id @default(autoincrement())
-  title     String
-  author    String
-  year      Int
-  createdAt DateTime @default(now())
+  bookId    Int
+  type      String
+  adminId   Int
+  timestamp DateTime @default(now())
+
+  // Relations
+  book  Books  @relation(fields: [bookId], references: [id])
+  admin Admins @relation(fields: [adminId], references: [id])
+}
+
+model Admins {
+  id           Int            @id @default(autoincrement())
+  name         String
+  email        String         @unique
+  password     String
+  createdAt    DateTime       @default(now())
+  transactions Transactions[]
 }
