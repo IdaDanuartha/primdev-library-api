@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import fileUpload from 'express-fileupload';
 import { body } from 'express-validator';
 import {
   createBook,
@@ -9,6 +8,10 @@ import {
   updateBook,
 } from '../controllers/books.controllers.js';
 import multer from 'multer';
+import {
+  authenticateToken,
+  authorizeAdmin,
+} from '../middlewares/auth.middlewares.js';
 
 const router = Router();
 
@@ -99,14 +102,23 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 router.get('/books', getAllBooks);
-router.get('/books/:id', getBookById);
-router.post('/books', upload.single('cover'), bookValidation, createBook);
+router.get('/books/:id', authenticateToken, getBookById);
+router.post(
+  '/books',
+  authenticateToken,
+  authorizeAdmin,
+  upload.single('cover'),
+  bookValidation,
+  createBook,
+);
 router.put(
   '/books/:id',
+  authenticateToken,
+  authorizeAdmin,
   upload.single('cover'),
   updateBookValidation,
   updateBook,
 );
-router.delete('/books/:id', deleteBook);
+router.delete('/books/:id', authenticateToken, authorizeAdmin, deleteBook);
 
 export default router;

@@ -1,5 +1,5 @@
-import prisma from '../database/config.database.js';
 import bcrypt from 'bcryptjs';
+import prisma from '../database/config.database.js';
 
 export const getAllUsers = async (req, res) => {
   const users = await prisma.users.findMany({
