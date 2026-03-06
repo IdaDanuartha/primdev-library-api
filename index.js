@@ -14,3 +14,5 @@ if (process.env.ENV !== 'production') {
     console.log(`Library API is running url: http://localhost:${port}`);
   });
 }
+
+export default app;
