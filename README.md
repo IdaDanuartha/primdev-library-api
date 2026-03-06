@@ -6,15 +6,15 @@ REST API untuk sistem manajemen perpustakaan. Dibangun dengan **Express.js**, **
 
 ## Tech Stack
 
-| Teknologi | Versi |
-|-----------|-------|
-| Node.js | >= 18 |
-| Express.js | ^5.2.1 |
-| Prisma | ^6.19.2 |
-| PostgreSQL | - |
-| Cloudinary | ^2.9.0 |
-| JWT | ^9.0.3 |
-| bcryptjs | ^3.0.3 |
+| Teknologi  | Versi   |
+| ---------- | ------- |
+| Node.js    | >= 18   |
+| Express.js | ^5.2.1  |
+| Prisma     | ^6.19.2 |
+| PostgreSQL | -       |
+| Cloudinary | ^2.9.0  |
+| JWT        | ^9.0.3  |
+| bcryptjs   | ^3.0.3  |
 
 ---
 
@@ -50,10 +50,10 @@ Authorization: Bearer <token>
 
 ### Role
 
-| Role | Deskripsi |
-|------|-----------|
-| `ADMIN` | Akses penuh ke semua endpoint |
-| `USER` | Akses terbatas (hanya endpoint publik & endpoint Books tertentu) |
+| Role    | Deskripsi                                                        |
+| ------- | ---------------------------------------------------------------- |
+| `ADMIN` | Akses penuh ke semua endpoint                                    |
+| `USER`  | Akses terbatas (hanya endpoint publik & endpoint Books tertentu) |
 
 ---
 
@@ -68,43 +68,47 @@ http://localhost:3000
 ## Data Models
 
 ### Users
-| Field | Type | Keterangan |
-|-------|------|------------|
-| `id` | Int | Primary key |
-| `name` | String | Nama pengguna |
-| `email` | String | Email unik |
-| `role` | Enum | `ADMIN` atau `USER` (default: `USER`) |
-| `createdAt` | DateTime | Waktu dibuat |
+
+| Field       | Type     | Keterangan                            |
+| ----------- | -------- | ------------------------------------- |
+| `id`        | Int      | Primary key                           |
+| `name`      | String   | Nama pengguna                         |
+| `email`     | String   | Email unik                            |
+| `role`      | Enum     | `ADMIN` atau `USER` (default: `USER`) |
+| `createdAt` | DateTime | Waktu dibuat                          |
 
 ### Categories
-| Field | Type | Keterangan |
-|-------|------|------------|
-| `id` | Int | Primary key |
-| `name` | String | Nama kategori |
-| `createdAt` | DateTime | Waktu dibuat |
+
+| Field       | Type     | Keterangan    |
+| ----------- | -------- | ------------- |
+| `id`        | Int      | Primary key   |
+| `name`      | String   | Nama kategori |
+| `createdAt` | DateTime | Waktu dibuat  |
 
 ### Books
-| Field | Type | Keterangan |
-|-------|------|------------|
-| `id` | Int | Primary key |
-| `title` | String | Judul buku |
-| `author` | String | Penulis |
-| `year` | Int | Tahun terbit |
-| `available` | Boolean | Status ketersediaan (default: `true`) |
-| `categoryId` | Int? | FK ke Categories (opsional) |
-| `cloudinaryId` | String? | ID Cloudinary untuk cover buku |
-| `coverUrl` | String? | URL cover buku (generated) |
-| `createdAt` | DateTime | Waktu dibuat |
+
+| Field          | Type     | Keterangan                            |
+| -------------- | -------- | ------------------------------------- |
+| `id`           | Int      | Primary key                           |
+| `title`        | String   | Judul buku                            |
+| `author`       | String   | Penulis                               |
+| `year`         | Int      | Tahun terbit                          |
+| `available`    | Boolean  | Status ketersediaan (default: `true`) |
+| `categoryId`   | Int?     | FK ke Categories (opsional)           |
+| `cloudinaryId` | String?  | ID Cloudinary untuk cover buku        |
+| `coverUrl`     | String?  | URL cover buku (generated)            |
+| `createdAt`    | DateTime | Waktu dibuat                          |
 
 ### Borrowings
-| Field | Type | Keterangan |
-|-------|------|------------|
-| `id` | Int | Primary key |
-| `userId` | Int | FK ke Users |
-| `bookId` | Int | FK ke Books |
-| `borrow_date` | DateTime | Tanggal peminjaman (default: now) |
-| `returned_at` | DateTime? | Tanggal pengembalian |
-| `createdAt` | DateTime | Waktu dibuat |
+
+| Field         | Type      | Keterangan                        |
+| ------------- | --------- | --------------------------------- |
+| `id`          | Int       | Primary key                       |
+| `userId`      | Int       | FK ke Users                       |
+| `bookId`      | Int       | FK ke Books                       |
+| `borrow_date` | DateTime  | Tanggal peminjaman (default: now) |
+| `returned_at` | DateTime? | Tanggal pengembalian              |
+| `createdAt`   | DateTime  | Waktu dibuat                      |
 
 ---
 
@@ -112,33 +116,33 @@ http://localhost:3000
 
 ### Ringkasan
 
-| Method | Endpoint | Auth | Role | Deskripsi |
-|--------|----------|------|------|-----------|
-| GET | `/` | - | - | Health check |
-| POST | `/api/register` | - | - | Registrasi pengguna baru |
-| POST | `/api/login` | - | - | Login & dapatkan token |
-| GET | `/api/books` | - | - | Ambil semua buku |
-| GET | `/api/books/:id` | ✓ | USER / ADMIN | Ambil buku berdasarkan ID |
-| POST | `/api/books` | ✓ | ADMIN | Tambah buku baru |
-| PUT | `/api/books/:id` | ✓ | ADMIN | Update buku |
-| DELETE | `/api/books/:id` | ✓ | ADMIN | Hapus buku |
-| GET | `/api/users` | ✓ | ADMIN | Ambil semua pengguna |
-| GET | `/api/users/:id` | ✓ | ADMIN | Ambil pengguna berdasarkan ID |
-| GET | `/api/users/:id/borrows` | ✓ | ADMIN | Ambil riwayat peminjaman pengguna |
-| POST | `/api/users` | ✓ | ADMIN | Tambah pengguna baru |
-| PUT | `/api/users/:id` | ✓ | ADMIN | Update pengguna |
-| DELETE | `/api/users/:id` | ✓ | ADMIN | Hapus pengguna |
-| GET | `/api/borrowings` | ✓ | ADMIN | Ambil semua data peminjaman |
-| GET | `/api/borrowings/:id` | ✓ | ADMIN | Ambil peminjaman berdasarkan ID |
-| POST | `/api/borrowings` | ✓ | ADMIN | Tambah data peminjaman |
-| PATCH | `/api/borrowings/:id/return` | ✓ | ADMIN | Proses pengembalian buku |
-| DELETE | `/api/borrowings/:id` | ✓ | ADMIN | Hapus data peminjaman |
-| GET | `/api/categories` | ✓ | ADMIN | Ambil semua kategori |
-| GET | `/api/categories/:id` | ✓ | ADMIN | Ambil kategori berdasarkan ID |
-| GET | `/api/categories/:id/books` | ✓ | ADMIN | Ambil buku berdasarkan kategori |
-| POST | `/api/categories` | ✓ | ADMIN | Tambah kategori baru |
-| PUT | `/api/categories/:id` | ✓ | ADMIN | Update kategori |
-| DELETE | `/api/categories/:id` | ✓ | ADMIN | Hapus kategori |
+| Method | Endpoint                     | Auth | Role         | Deskripsi                         |
+| ------ | ---------------------------- | ---- | ------------ | --------------------------------- |
+| GET    | `/`                          | -    | -            | Health check                      |
+| POST   | `/api/register`              | -    | -            | Registrasi pengguna baru          |
+| POST   | `/api/login`                 | -    | -            | Login & dapatkan token            |
+| GET    | `/api/books`                 | -    | -            | Ambil semua buku                  |
+| GET    | `/api/books/:id`             | ✓    | USER / ADMIN | Ambil buku berdasarkan ID         |
+| POST   | `/api/books`                 | ✓    | ADMIN        | Tambah buku baru                  |
+| PUT    | `/api/books/:id`             | ✓    | ADMIN        | Update buku                       |
+| DELETE | `/api/books/:id`             | ✓    | ADMIN        | Hapus buku                        |
+| GET    | `/api/users`                 | ✓    | ADMIN        | Ambil semua pengguna              |
+| GET    | `/api/users/:id`             | ✓    | ADMIN        | Ambil pengguna berdasarkan ID     |
+| GET    | `/api/users/:id/borrows`     | ✓    | ADMIN        | Ambil riwayat peminjaman pengguna |
+| POST   | `/api/users`                 | ✓    | ADMIN        | Tambah pengguna baru              |
+| PUT    | `/api/users/:id`             | ✓    | ADMIN        | Update pengguna                   |
+| DELETE | `/api/users/:id`             | ✓    | ADMIN        | Hapus pengguna                    |
+| GET    | `/api/borrowings`            | ✓    | ADMIN        | Ambil semua data peminjaman       |
+| GET    | `/api/borrowings/:id`        | ✓    | ADMIN        | Ambil peminjaman berdasarkan ID   |
+| POST   | `/api/borrowings`            | ✓    | ADMIN        | Tambah data peminjaman            |
+| PATCH  | `/api/borrowings/:id/return` | ✓    | ADMIN        | Proses pengembalian buku          |
+| DELETE | `/api/borrowings/:id`        | ✓    | ADMIN        | Hapus data peminjaman             |
+| GET    | `/api/categories`            | ✓    | ADMIN        | Ambil semua kategori              |
+| GET    | `/api/categories/:id`        | ✓    | ADMIN        | Ambil kategori berdasarkan ID     |
+| GET    | `/api/categories/:id/books`  | ✓    | ADMIN        | Ambil buku berdasarkan kategori   |
+| POST   | `/api/categories`            | ✓    | ADMIN        | Tambah kategori baru              |
+| PUT    | `/api/categories/:id`        | ✓    | ADMIN        | Update kategori                   |
+| DELETE | `/api/categories/:id`        | ✓    | ADMIN        | Hapus kategori                    |
 
 ---
 
@@ -158,10 +162,10 @@ Registrasi pengguna baru dengan role `USER`.
 }
 ```
 
-| Field | Type | Validasi |
-|-------|------|----------|
-| `name` | String | Wajib |
-| `email` | String | Wajib, format email valid |
+| Field      | Type   | Validasi                  |
+| ---------- | ------ | ------------------------- |
+| `name`     | String | Wajib                     |
+| `email`    | String | Wajib, format email valid |
 | `password` | String | Wajib, minimal 6 karakter |
 
 **Response `201 Created`**
@@ -202,10 +206,10 @@ Login dan dapatkan JWT access token.
 }
 ```
 
-| Field | Type | Validasi |
-|-------|------|----------|
-| `email` | String | Wajib, format email valid |
-| `password` | String | Wajib |
+| Field      | Type   | Validasi                  |
+| ---------- | ------ | ------------------------- |
+| `email`    | String | Wajib, format email valid |
+| `password` | String | Wajib                     |
 
 **Response `200 OK`**
 
@@ -268,8 +272,8 @@ Ambil detail buku berdasarkan ID. **Memerlukan autentikasi.**
 **Parameters**
 
 | Param | Type | Keterangan |
-|-------|------|------------|
-| `id` | Int | ID buku |
+| ----- | ---- | ---------- |
+| `id`  | Int  | ID buku    |
 
 **Response `200 OK`**
 
@@ -303,13 +307,13 @@ Tambah buku baru. **Hanya ADMIN.**
 
 **Request Body** (`multipart/form-data`)
 
-| Field | Type | Validasi |
-|-------|------|----------|
-| `title` | String | Wajib |
-| `author` | String | Wajib |
-| `year` | Int | Wajib, angka |
-| `categoryId` | Int | Opsional |
-| `cover` | File | Opsional, PNG/JPEG, maks 1MB |
+| Field        | Type   | Validasi                     |
+| ------------ | ------ | ---------------------------- |
+| `title`      | String | Wajib                        |
+| `author`     | String | Wajib                        |
+| `year`       | Int    | Wajib, angka                 |
+| `categoryId` | Int    | Opsional                     |
+| `cover`      | File   | Opsional, PNG/JPEG, maks 1MB |
 
 **Response `201 Created`**
 
@@ -339,18 +343,18 @@ Update data buku. **Hanya ADMIN.** Semua field bersifat opsional.
 **Parameters**
 
 | Param | Type | Keterangan |
-|-------|------|------------|
-| `id` | Int | ID buku |
+| ----- | ---- | ---------- |
+| `id`  | Int  | ID buku    |
 
 **Request Body** (`multipart/form-data`)
 
-| Field | Type | Keterangan |
-|-------|------|------------|
-| `title` | String | Opsional |
-| `author` | String | Opsional |
-| `year` | Int | Opsional |
-| `categoryId` | Int | Opsional |
-| `cover` | File | Opsional, PNG/JPEG, maks 1MB |
+| Field        | Type   | Keterangan                   |
+| ------------ | ------ | ---------------------------- |
+| `title`      | String | Opsional                     |
+| `author`     | String | Opsional                     |
+| `year`       | Int    | Opsional                     |
+| `categoryId` | Int    | Opsional                     |
+| `cover`      | File   | Opsional, PNG/JPEG, maks 1MB |
 
 **Response `200 OK`**
 
@@ -380,8 +384,8 @@ Hapus buku beserta cover dari Cloudinary. **Hanya ADMIN.**
 **Parameters**
 
 | Param | Type | Keterangan |
-|-------|------|------------|
-| `id` | Int | ID buku |
+| ----- | ---- | ---------- |
+| `id`  | Int  | ID buku    |
 
 **Response `200 OK`**
 
@@ -486,12 +490,12 @@ Tambah pengguna baru.
 }
 ```
 
-| Field | Type | Validasi |
-|-------|------|----------|
-| `name` | String | Wajib |
-| `email` | String | Wajib, format email valid |
-| `password` | String | Wajib, minimal 6 karakter |
-| `role` | Enum | Wajib, `ADMIN` atau `USER` |
+| Field      | Type   | Validasi                   |
+| ---------- | ------ | -------------------------- |
+| `name`     | String | Wajib                      |
+| `email`    | String | Wajib, format email valid  |
+| `password` | String | Wajib, minimal 6 karakter  |
+| `role`     | Enum   | Wajib, `ADMIN` atau `USER` |
 
 **Response `201 Created`**
 
@@ -525,12 +529,12 @@ Update data pengguna. Semua field bersifat opsional.
 }
 ```
 
-| Field | Type | Keterangan |
-|-------|------|------------|
-| `name` | String | Opsional |
-| `email` | String | Opsional, format email valid |
-| `password` | String | Opsional, minimal 6 karakter |
-| `role` | Enum | Opsional, `ADMIN` atau `USER` |
+| Field      | Type   | Keterangan                    |
+| ---------- | ------ | ----------------------------- |
+| `name`     | String | Opsional                      |
+| `email`    | String | Opsional, format email valid  |
+| `password` | String | Opsional, minimal 6 karakter  |
+| `role`     | Enum   | Opsional, `ADMIN` atau `USER` |
 
 **Response `200 OK`**
 
@@ -629,10 +633,10 @@ Buat peminjaman baru. Buku harus dalam status `available: true`.
 }
 ```
 
-| Field | Type | Validasi |
-|-------|------|----------|
-| `userId` | Int | Wajib |
-| `bookId` | Int | Wajib |
+| Field    | Type | Validasi |
+| -------- | ---- | -------- |
+| `userId` | Int  | Wajib    |
+| `bookId` | Int  | Wajib    |
 
 **Response `201 Created`**
 
@@ -678,9 +682,9 @@ Proses pengembalian buku.
 
 **Parameters**
 
-| Param | Type | Keterangan |
-|-------|------|------------|
-| `id` | Int | ID peminjaman |
+| Param | Type | Keterangan    |
+| ----- | ---- | ------------- |
+| `id`  | Int  | ID peminjaman |
 
 **Response `200 OK`**
 
@@ -813,9 +817,9 @@ Tambah kategori baru.
 }
 ```
 
-| Field | Type | Validasi |
-|-------|------|----------|
-| `name` | String | Wajib |
+| Field  | Type   | Validasi |
+| ------ | ------ | -------- |
+| `name` | String | Wajib    |
 
 **Response `201 Created`**
 
@@ -844,9 +848,9 @@ Update nama kategori.
 }
 ```
 
-| Field | Type | Keterangan |
-|-------|------|------------|
-| `name` | String | Opsional |
+| Field  | Type   | Keterangan |
+| ------ | ------ | ---------- |
+| `name` | String | Opsional   |
 
 **Response `200 OK`**
 
@@ -879,14 +883,14 @@ Hapus kategori.
 
 ## Error Responses Umum
 
-| Status | Keterangan |
-|--------|------------|
-| `400` | Validasi input gagal |
-| `401` | Kredensial tidak valid |
-| `403` | Token tidak ada / tidak valid / akses ditolak |
-| `404` | Resource tidak ditemukan |
-| `409` | Konflik data (misal: email sudah terdaftar) |
-| `500` | Internal server error |
+| Status | Keterangan                                    |
+| ------ | --------------------------------------------- |
+| `400`  | Validasi input gagal                          |
+| `401`  | Kredensial tidak valid                        |
+| `403`  | Token tidak ada / tidak valid / akses ditolak |
+| `404`  | Resource tidak ditemukan                      |
+| `409`  | Konflik data (misal: email sudah terdaftar)   |
+| `500`  | Internal server error                         |
 
 **Response `400 Bad Request`** (validasi gagal)
 
